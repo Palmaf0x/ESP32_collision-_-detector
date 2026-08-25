@@ -1,10 +1,7 @@
 #include <Arduino.h>
-
+// python -m platformio run --target upload --target monitor (to upload and run the code in the terminal)
 void setup() {
     Serial.begin(115200);
-    while (!Serial) {
-        ; // Wait for serial port connection
-    }
     Serial.println("ESP32 Collision Detector Initialized.");
 }
 
