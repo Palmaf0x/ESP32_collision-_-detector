@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project Specification - ESP32 Collision Detector</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+
+        @page {
+            size: letter;
+            margin: 20mm;
+        }
+
+        body {
+            font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+            color: #111111;
+            background-color: #ffffff;
+            line-height: 1.5;
+            font-size: 11pt;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 18pt;
+            text-transform: uppercase;
+            border-bottom: 2px solid #111111;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            font-size: 13pt;
+            text-transform: uppercase;
+            border-bottom: 1px dashed #444444;
+            padding-bottom: 3px;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        .meta-box {
+            border: 1px solid #111111;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            background-color: #fcfcfc;
+        }
+
+        ul, ol {
+            margin-top: 5px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        th, td {
+            border: 1px solid #111111;
+            padding: 6px 8px;
+            text-align: left;
+            font-size: 10pt;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            text-transform: uppercase;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 9pt;
+            text-align: center;
+            border-top: 1px solid #cccccc;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>PROJECT SPECIFICATION // COLLISION DETECTOR</h1>
+
+<div class="meta-box">
+    <strong>PROJECT NAME:</strong> ESP32 Ultrasonic Collision Detector & Telemetry Engine<br>
+    <strong>TARGET HARDWARE:</strong> ESP32 Microcontroller, HC-SR04, Passive Buzzer, LED<br>
+    <strong>PRIMARY STACK:</strong> C++20 / FreeRTOS / Node.js / HTML5 WebSockets / SQLite
+</div>
+
+<h2>1. System Architecture & Objectives</h2>
+<p>
+    An embedded telemetry system using an ESP32 microcontroller and HC-SR04 ultrasonic sensor to calculate real-time proximity and target velocity. The hardware interface provides physical auditory/visual alert cues while concurrently streaming JSON telemetry frames via WebSockets to a web dashboard and SQLite persistence engine.
+</p>
+
+<h2>2. Hardware & Firmware Requirements</h2>
+<ul>
+    <li><strong>Voltage Step-Down:</strong> Resistor divider (5V to 3.3V) on HC-SR04 ECHO signal pin.</li>
+    <li><strong>Pulse Timing:</strong> Hardware-level GPIO interrupts attached to ECHO transitions.</li>
+    <li><strong>Signal Filtering:</strong> C++ Exponential Moving Average (EMA) to suppress sonar jitter.</li>
+    <li><strong>Alert Logic:</strong> Non-blocking hardware PWM (LEDC) tone control for passive buzzer.</li>
+    <li><strong>Concurrency:</strong> Core 1 pinned to high-frequency acquisition; Core 0 pinned to network telemetry.</li>
+</ul>
+
+<h2>3. Execution Roadmap</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Phase</th>
+        <th>Focus Area</th>
+        <th>Technical Output</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>01</td>
+        <td>Hardware Driver</td>
+        <td>Interrupt-driven HC-SR04 measurement & LEDC PWM buzzer module.</td>
+    </tr>
+    <tr>
+        <td>02</td>
+        <td>Signal Processing</td>
+        <td>C++ velocity calculation and moving-average filter pipeline.</td>
+    </tr>
+    <tr>
+        <td>03</td>
+        <td>Networking</td>
+        <td>FreeRTOS dual-core separation & WebSocket client output stream.</td>
+    </tr>
+    <tr>
+        <td>04</td>
+        <td>Ingestion & UI</td>
+        <td>Node.js server receiving packet stream + HTML5 canvas dashboard.</td>
+    </tr>
+    <tr>
+        <td>05</td>
+        <td>Data Analytics</td>
+        <td>Python daemon logging real-time stream into SQLite database.</td>
+    </tr>
+    </tbody>
+</table>
+
+<h2>4. Core Technical Documentation Resources</h2>
+<ul>
+    <li>Espressif ESP-IDF API Reference (GPIO, LEDC, esp_timer)</li>
+    <li>FreeRTOS Task & Queue API Manuals (freertos.org)</li>
+    <li>MDN Web Docs - WebSockets API Specification</li>
+    <li>Python Standard Library - sqlite3 Reference</li>
+</ul>
+
+<div class="footer">
+    ESP32 COLLISION DETECTOR SYSTEM SPECIFICATION — SPEC-REV 1.0
+</div>
+
+</body>
+</html>
