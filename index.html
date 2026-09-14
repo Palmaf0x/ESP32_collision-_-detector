@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIoT Collision Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1c1c1e;
+            --text-main: #d1d1d1;
+            --text-dim: #737373;
+            --accent-red: #ff3b30;
+            --accent-orange: #ff9500;
+            --accent-green: #34c759;
+            --font-dot: 'DotGothic16', sans-serif;
+            --font-mono: 'Share Tech Mono', monospace;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .header h1 {
+            font-family: var(--font-dot);
+            color: #ffffff;
+            font-size: 1.5rem;
+            margin: 0 0 5px 0;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            color: var(--accent-orange);
+            font-size: 0.8rem;
+            margin: 0;
+        }
+
+        .header p::before {
+            content: '● ';
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #2c2c2e;
+        }
+
+        .card-header {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .data-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .distance-value {
+            font-family: var(--font-dot);
+            font-size: 4rem;
+            color: #ffffff;
+            line-height: 1;
+        }
+
+        .unit {
+            font-size: 1rem;
+            color: var(--text-dim);
+            font-family: var(--font-mono);
+        }
+
+        .radar-container {
+            width: 100%;
+            height: 60px;
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            margin-bottom: 20px;
+        }
+
+        .radar-bar {
+            flex: 1;
+            background-color: #333;
+            border-radius: 2px;
+            transition: background-color 0.3s ease, height 0.3s ease;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #333;
+            padding-top: 15px;
+        }
+
+        .status-label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .status-indicator {
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent-green);
+            box-shadow: 0 0 8px var(--accent-green);
+        }
+
+        /* Simulation Controls */
+        .simulation-panel {
+            margin-top: 40px;
+            width: 100%;
+            max-width: 400px;
+            padding: 15px;
+            border: 1px dashed #444;
+            border-radius: 8px;
+        }
+
+        .simulation-panel label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        input[type=range] {
+            width: 100%;
+            accent-color: var(--accent-orange);
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Vehicle Prox_AI</h1>
+    <p id="system-status">System Operational</p>
+</div>
+
+<div class="card">
+    <div class="card-header">01 COLLISION MONITOR</div>
+
+    <div class="data-display">
+        <div>
+            <span class="distance-value" id="dist-display">150</span>
+            <span class="unit">cm</span>
+        </div>
+        <div id="alert-icon" style="display:none; color: var(--accent-red);">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+        </div>
+    </div>
+
+    <div class="radar-container" id="radar-bars">
+        <!-- Bars generated via JS -->
+    </div>
+
+    <div class="status-row">
+        <div class="status-label">THREAT LEVEL</div>
+        <div class="status-indicator">
+            <span id="status-text" style="color: var(--accent-green)">SAFE</span>
+            <div class="status-dot" id="status-dot"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Simulator for development before Node.js backend integration -->
+<div class="simulation-panel">
+    <label>MOCK SENSOR INPUT (Distance in cm): <span id="mock-val">150</span></label>
+    <input type="range" id="distance-slider" min="5" max="300" value="150">
+</div>
+
+<script src="index.js"></script>
+</body>
+</html>
