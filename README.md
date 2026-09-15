@@ -1,7 +1,6 @@
 # ESP32_collision-_detector
 
 ### Phase 01 Completion Summary: Hardware Driver
-![Phase 1 Hardware Schematic](./assets/hardware_schematic.png)
 **Components Used:**
 - ESP32 Development Board
 - HC-SR04 Ultrasonic Sensor
