@@ -108,4 +108,4 @@ async function pollServer() {
 
 // Initialization
 requestAnimationFrame(animateUI); // Start visual rendering loop
-setInterval(pollServer, 500);     // Poll the server every 500ms
+setInterval(pollServer, 1000);     // Poll the server every 500ms
