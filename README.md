@@ -1,26 +1,46 @@
-# ESP32_collision-_detector
+# ESP32 Car Collision Detector
 
-### Phase 01 Completion Summary: Hardware Driver
-**Components Used:**
-- ESP32 Development Board
-- HC-SR04 Ultrasonic Sensor
-- Passive Buzzer
+An IoT collision detection system that measures real-time distance using an HC-SR04 ultrasonic sensor, provides dynamic visual (LED) and audio (buzzer) alerts based on threat proximity, and streams telemetry over HTTP to a Node.js backend.
 
-**Wiring and Pinout Configuration:**
+---
 
-**HC-SR04 Ultrasonic Sensor:**
-- **VCC:** Connected to the 5V pin on the ESP32.
-- **Trigger:** Connected to GPIO 12 on the ESP32.
-- **Echo:** Connected to GPIO 35 (G35) on the ESP32 via a 5V to 3.3V voltage divider circuit.
-- **GND:** Connected to the common ground (GND) on the ESP32.
+## 📌 Hardware Pinout
 
-**Passive Buzzer:**
-- **Positive (+):** Connected to GPIO 12 on the ESP32 (shares the connection with the sensor's Trigger pin for synchronization).
-- **Negative (-):** Connected to the common ground (GND) on the ESP32.
+| Component | ESP32 GPIO Pin | Mode | Description |
+| :--- | :--- | :--- | :--- |
+| **HC-SR04 Trigger (`triggPin`)** | **GPIO 26** | `OUTPUT` | Sends pulse trigger signal |
+| **HC-SR04 Echo (`echoPin`)** | **GPIO 27** | `INPUT` | Receives echo return signal |
+| **Status LED (`ledPin`)** | **GPIO 32** | `OUTPUT` | Visual warning indicator |
+| **Passive Buzzer (`buzzerPin`)** | **GPIO 33** | `OUTPUT` | PWM tone alert generator |
 
-**Logic Level Consideration:**
-The echo signal from the HC-SR04 operates at 5V logic. A voltage divider is implemented before connecting this signal to the ESP32's GPIO 35 (G35) to step it down to a safe 3.3V level, protecting the input pin.
+> **Note:** Ensure all components (sensor, LED, buzzer) share a common ground (`GND`) rail connected to one of the ESP32 `GND` pins. Do not connect ground wires to flash strapping pins such as `CMD` or `GPIO 12`.
 
-**Functionality and Drivers:**
-- Drivers have been developed to handle input from the HC-SR04, providing a basis for distance calculation.
-- An LEDC PWM driver controls the buzzer, allowing it to generate audible tones based on input from the collision project's logic.
+---
+
+## 🖥️ Node.js Server & Telemetry API
+
+The Node.js server acts as an intermediate ingestion point for telemetry and serves data to web dashboards.
+
+### API Endpoints
+
+* **`POST /api/sensor`**
+    * **Description:** Ingests distance readings from the ESP32.
+    * **Payload:** `{"Distance": 45}`
+    * **Response:** `200 OK` with confirmation message.
+* **`GET /api/distance`**
+    * **Description:** Exposes the latest distance reading to external web applications.
+    * **Response:** `{"distance": 45}`
+    * **CORS:** Enabled (`Access-Control-Allow-Origin: *`) for browser fetch requests.
+
+---
+
+## ⚙️ How to Adapt and Run
+
+To deploy this project on your own local network, you must update the Wi-Fi credentials and target server IP address in both the ESP32 source code and Node.js environment.
+
+### 1. Find Your Local IPv4 Address
+Open a terminal on the machine hosting the Node.js server and retrieve your local IP address:
+
+* **Windows (PowerShell / CMD):**
+  ```cmd
+  ipconfig
