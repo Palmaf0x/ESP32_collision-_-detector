@@ -2,9 +2,9 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-const char* ssid = "BELL721";
-const char* password = "766654CEA1A9";
-String serverURL = "http://192.168.2.78:5000/api/sensor"; // Fixed port colon separator
+const char* ssid = ""; // YOUR WIFI SSID
+const char* password = ""; // YOUR WIFI PASSWORD
+String serverURL = ""; // YOUR SERVER URL
 
 const int triggPin = 26;
 const int echoPin = 27;
