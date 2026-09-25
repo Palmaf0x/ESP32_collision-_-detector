@@ -89,7 +89,7 @@ function animateUI() {
 async function pollServer() {
     try {
         // Replace with your local Node.js / Express server endpoint
-        const response = await fetch('http://localhost:3000/api/distance');
+        const response = await fetch('http://localhost:5000/api/distance');
 
         if (!response.ok) {
             throw new Error(`HTTP Error: ${response.status}`);
